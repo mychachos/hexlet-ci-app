@@ -10,3 +10,17 @@ jobs:
          - run: make setup
          - run: make test
          - run: make lint
+   security:
+      runs-on: ubuntu-latest
+      steps:
+         - uses: actions/setup-node@v3
+           with:
+               node-version: latest
+               cache: 'npm'
+         - run: npm ci
+         - run: npm test
+         - uses: actions/checkout@master
+         - name: Run Snyk to check for vulnerabilities
+           uses: snyk/actions/node@master
+           env:
+             SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
